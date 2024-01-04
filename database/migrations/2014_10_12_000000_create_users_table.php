@@ -19,6 +19,15 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            // Custom fields
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state', 2)->nullable();
+            $table->string('zip', 10)->nullable();
+            $table->string('country')->nullable();
+            $table->enum('education', ['Basic', 'Secondary', 'Higher'])->nullable();
         });
     }
 
