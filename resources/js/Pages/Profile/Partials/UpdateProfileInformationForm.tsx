@@ -6,6 +6,14 @@ import { PageProps } from "@/types";
 import { Button } from "@/Components/ui/button";
 import { Label } from "@/Components/ui/label";
 import { Input } from "@/Components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/Components/ui/select";
+import { MultiSelect } from "@/Components/ui/multi-select";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -19,9 +27,27 @@ export default function UpdateProfileInformation({
     const user = usePage<PageProps>().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
-        useForm({
-            first_name: user.first_name,
-            last_name: user.last_name,
+        useForm<{
+            first_name: string;
+            last_name: string;
+            address: string;
+            city: string;
+            state: string;
+            zip: string;
+            country: string;
+            education: string;
+            hobbies: string[];
+            email: string;
+        }>({
+            first_name: user.first_name || "",
+            last_name: user.last_name || "",
+            address: user.address || "",
+            city: user.city || "",
+            state: user.state || "",
+            zip: user.zip || "",
+            country: user.country || "",
+            education: user.education || "",
+            hobbies: user.hobbies || [],
             email: user.email,
         });
 
@@ -130,6 +156,159 @@ export default function UpdateProfileInformation({
                         )}
                     </div>
                 )}
+
+                <div className="mt-4 ">
+                    <Label htmlFor="address">Address</Label>
+
+                    <Input
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={data.address}
+                        className="mt-1 block w-full"
+                        autoComplete="address"
+                        onChange={(e) => setData("address", e.target.value)}
+                    />
+
+                    <InputError message={errors.address} className="mt-2" />
+                </div>
+
+                <div className="flex gap-4 mt-4">
+                    <div className="w-full">
+                        <Label htmlFor="city">City</Label>
+
+                        <Input
+                            type="text"
+                            id="city"
+                            name="city"
+                            value={data.city}
+                            className="mt-1 block w-full"
+                            autoComplete="city"
+                            onChange={(e) => setData("city", e.target.value)}
+                        />
+
+                        <InputError message={errors.city} className="mt-2" />
+                    </div>
+
+                    <div className="w-full">
+                        <Label htmlFor="state">State</Label>
+
+                        <Input
+                            type="text"
+                            id="state"
+                            name="state"
+                            value={data.state}
+                            className="mt-1 block w-full"
+                            autoComplete="state"
+                            onChange={(e) => setData("state", e.target.value)}
+                        />
+
+                        <InputError message={errors.state} className="mt-2" />
+                    </div>
+                </div>
+
+                <div className="flex gap-4 mt-4">
+                    <div className="w-full">
+                        <Label htmlFor="zip">Zip</Label>
+
+                        <Input
+                            type="text"
+                            id="zip"
+                            name="zip"
+                            value={data.zip}
+                            className="mt-1 block w-full"
+                            autoComplete="zip"
+                            onChange={(e) => setData("zip", e.target.value)}
+                        />
+
+                        <InputError message={errors.zip} className="mt-2" />
+                    </div>
+
+                    <div className="w-full">
+                        <Label htmlFor="country">Country</Label>
+
+                        <Input
+                            type="text"
+                            id="country"
+                            name="country"
+                            value={data.country}
+                            className="mt-1 block w-full"
+                            autoComplete="country"
+                            onChange={(e) => setData("country", e.target.value)}
+                        />
+
+                        <InputError message={errors.country} className="mt-2" />
+                    </div>
+                </div>
+
+                <div className="mt-4">
+                    <Label htmlFor="education">Education</Label>
+
+                    <Select
+                        name="education"
+                        onValueChange={(o) => setData("education", o)}
+                        defaultValue={data.education}
+                        value={data.education}
+                        autoComplete="education"
+                    >
+                        <SelectTrigger className="w-full" id="education">
+                            <SelectValue placeholder="-" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="Basic">Basic</SelectItem>
+                            <SelectItem value="Secondary">Secondary</SelectItem>
+                            <SelectItem value="Higher">Higher</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <InputError message={errors.country} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <Label htmlFor="education">Hobbies</Label>
+
+                    <MultiSelect
+                        selected={data.hobbies}
+                        options={[
+                            "Reading",
+                            "Writing",
+                            "Coding",
+                            "Gaming",
+                            "Sports",
+                            "Music",
+                            "Movies",
+                            "Cooking",
+                            "Dancing",
+                            "Singing",
+                            "Traveling",
+                            "Photography",
+                            "Painting",
+                            "Gardening",
+                            "Fishing",
+                            "Hiking",
+                            "Camping",
+                            "Shopping",
+                            "Sightseeing",
+                            "Swimming",
+                            "Running",
+                            "Cycling",
+                            "Yoga",
+                            "Meditation",
+                            "Volunteering",
+                            "Socializing",
+                            "Other",
+                        ]?.map((hobby) => ({
+                            value: hobby,
+                            label: hobby,
+                        }))}
+                        onChange={(e) => setData("hobbies", e)}
+                        // className="mt-1 block w-full"
+                        // autoComplete="hobbies"
+                        //
+                    />
+
+                    <InputError message={errors.hobbies} className="mt-2" />
+                </div>
 
                 <div className="flex items-center gap-4">
                     <Button disabled={processing}>Save</Button>

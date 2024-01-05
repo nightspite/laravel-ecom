@@ -10,6 +10,7 @@ export interface User {
     zip?: string;
     country?: string;
     education?: 'Basic' | 'Secondary' | 'Higher';
+    hobbies?: string[];
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {

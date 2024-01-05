@@ -13,7 +13,6 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { MultiSelect } from "@/Components/ui/multi-select";
-import { set, uniq } from "lodash";
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm<{
@@ -25,7 +24,7 @@ export default function Register() {
         zip: string;
         country: string;
         education: string;
-        hobbies: Record<"value" | "label", string>[];
+        hobbies: string[];
         email: string;
         password: string;
         password_confirmation: string;
@@ -76,7 +75,6 @@ export default function Register() {
                             onChange={(e) =>
                                 setData("first_name", e.target.value)
                             }
-                            required
                         />
 
                         <InputError
@@ -98,7 +96,6 @@ export default function Register() {
                             onChange={(e) =>
                                 setData("last_name", e.target.value)
                             }
-                            required
                         />
 
                         <InputError
@@ -119,7 +116,6 @@ export default function Register() {
                         className="mt-1 block w-full"
                         autoComplete="address"
                         onChange={(e) => setData("address", e.target.value)}
-                        required
                     />
 
                     <InputError message={errors.address} className="mt-2" />
@@ -137,7 +133,6 @@ export default function Register() {
                             className="mt-1 block w-full"
                             autoComplete="city"
                             onChange={(e) => setData("city", e.target.value)}
-                            required
                         />
 
                         <InputError message={errors.city} className="mt-2" />
@@ -154,7 +149,6 @@ export default function Register() {
                             className="mt-1 block w-full"
                             autoComplete="state"
                             onChange={(e) => setData("state", e.target.value)}
-                            required
                         />
 
                         <InputError message={errors.state} className="mt-2" />
@@ -173,7 +167,6 @@ export default function Register() {
                             className="mt-1 block w-full"
                             autoComplete="zip"
                             onChange={(e) => setData("zip", e.target.value)}
-                            required
                         />
 
                         <InputError message={errors.zip} className="mt-2" />
@@ -190,7 +183,6 @@ export default function Register() {
                             className="mt-1 block w-full"
                             autoComplete="country"
                             onChange={(e) => setData("country", e.target.value)}
-                            required
                         />
 
                         <InputError message={errors.country} className="mt-2" />
@@ -205,7 +197,6 @@ export default function Register() {
                         onValueChange={(o) => setData("education", o)}
                         defaultValue={data.education}
                         value={data.education}
-                        required
                         autoComplete="education"
                     >
                         <SelectTrigger className="w-full" id="education">
@@ -227,14 +218,41 @@ export default function Register() {
                     <MultiSelect
                         selected={data.hobbies}
                         options={[
-                            { value: "Reading", label: "Reading" },
-                            { value: "Writing", label: "Writing" },
-                            { value: "Coding", label: "Coding" },
-                        ]}
+                            "Reading",
+                            "Writing",
+                            "Coding",
+                            "Gaming",
+                            "Sports",
+                            "Music",
+                            "Movies",
+                            "Cooking",
+                            "Dancing",
+                            "Singing",
+                            "Traveling",
+                            "Photography",
+                            "Painting",
+                            "Gardening",
+                            "Fishing",
+                            "Hiking",
+                            "Camping",
+                            "Shopping",
+                            "Sightseeing",
+                            "Swimming",
+                            "Running",
+                            "Cycling",
+                            "Yoga",
+                            "Meditation",
+                            "Volunteering",
+                            "Socializing",
+                            "Other",
+                        ]?.map((hobby) => ({
+                            value: hobby,
+                            label: hobby,
+                        }))}
                         onChange={(e) => setData("hobbies", e)}
                         // className="mt-1 block w-full"
                         // autoComplete="hobbies"
-                        // required
+                        //
                     />
 
                     <InputError message={errors.hobbies} className="mt-2" />
@@ -251,7 +269,6 @@ export default function Register() {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         onChange={(e) => setData("email", e.target.value)}
-                        required
                     />
 
                     <InputError message={errors.email} className="mt-2" />
@@ -268,7 +285,6 @@ export default function Register() {
                         className="mt-1 block w-full"
                         autoComplete="new-password"
                         onChange={(e) => setData("password", e.target.value)}
-                        required
                     />
 
                     <InputError message={errors.password} className="mt-2" />
@@ -289,7 +305,6 @@ export default function Register() {
                         onChange={(e) =>
                             setData("password_confirmation", e.target.value)
                         }
-                        required
                     />
 
                     <InputError

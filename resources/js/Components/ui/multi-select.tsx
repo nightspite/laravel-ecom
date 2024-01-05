@@ -21,11 +21,11 @@ export type OptionType = Record<"value" | "label", string>;
 
 interface MultiSelectProps {
     options: Record<"value" | "label", string>[];
-    selected: Record<"value" | "label", string>[];
+    selected: string[];
     // onChange: React.Dispatch<
     //     React.SetStateAction<Record<"value" | "label", string>[]>
     // >;
-    onChange: (selected: Record<"value" | "label", string>[]) => void;
+    onChange: (selected: string[]) => void;
     className?: string;
     placeholder?: string;
 }
@@ -34,8 +34,8 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     ({ options, selected, onChange, className, ...props }, ref) => {
         const [open, setOpen] = React.useState(false);
 
-        const handleUnselect = (item: Record<"value" | "label", string>) => {
-            onChange(selected.filter((i) => i.value !== item.value));
+        const handleUnselect = (item: string) => {
+            onChange(selected.filter((i) => i !== item));
         };
 
         // on delete key press, remove last selected item
@@ -79,11 +79,16 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                             {selected.map((item) => (
                                 <Badge
                                     variant="outline"
-                                    key={item.value}
+                                    key={item}
                                     className="flex items-center gap-1 group-hover:bg-background"
                                     onClick={() => handleUnselect(item)}
                                 >
-                                    {item.label}
+                                    {/* {item.label} */}
+                                    {
+                                        options?.find(
+                                            (option) => option.value === item
+                                        )?.label
+                                    }
                                     <Button
                                         asChild
                                         variant="outline"
@@ -129,15 +134,13 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                                     onSelect={() => {
                                         onChange(
                                             selected.some(
-                                                (item) =>
-                                                    item.value === option.value
+                                                (item) => item === option.value
                                             )
                                                 ? selected.filter(
                                                       (item) =>
-                                                          item.value !==
-                                                          option.value
+                                                          item !== option.value
                                                   )
-                                                : [...selected, option]
+                                                : [...selected, option?.value]
                                         );
                                         setOpen(true);
                                     }}
@@ -146,8 +149,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                                         className={cn(
                                             "mr-2 h-4 w-4",
                                             selected.some(
-                                                (item) =>
-                                                    item.value === option.value
+                                                (item) => item === option.value
                                             )
                                                 ? "opacity-100"
                                                 : "opacity-0"

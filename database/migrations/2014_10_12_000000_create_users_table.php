@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -24,10 +23,11 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
-            $table->string('state', 2)->nullable();
-            $table->string('zip', 10)->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
             $table->string('country')->nullable();
             $table->enum('education', ['Basic', 'Secondary', 'Higher'])->nullable();
+            $table->json('hobbies')->nullable();
         });
     }
 

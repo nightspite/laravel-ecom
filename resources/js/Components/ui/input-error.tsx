@@ -6,13 +6,11 @@ const InputError = ({
     className,
     ...props
 }: HTMLAttributes<HTMLParagraphElement> & { message?: string }) => {
-    if (message) {
+    return message ? (
         <p {...props} className={cn("text-sm text-red-600", className)}>
             {message}
-        </p>;
-    }
-
-    return null;
+        </p>
+    ) : null;
 };
 
 InputError.displayName = "InputError";

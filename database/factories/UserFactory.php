@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'zip' => fake()->postcode(),
             'country' => fake()->country(),
             'education' => fake()->randomElement(['Basic', 'Secondary', 'Higher']),
+            'hobbies' => fake()->randomElement(['Reading', 'Writing', 'Coding', 'Gaming', 'Sports', 'Music', 'Movies', 'Cooking', 'Dancing', 'Singing', 'Traveling', 'Photography', 'Painting', 'Gardening', 'Fishing', 'Hiking', 'Camping', 'Shopping', 'Sightseeing', 'Swimming', 'Running', 'Cycling', 'Yoga', 'Meditation', 'Volunteering', 'Socializing', 'Other'])
         ];
     }
 

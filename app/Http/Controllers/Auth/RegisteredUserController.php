@@ -39,7 +39,8 @@ class RegisteredUserController extends Controller
             'state' => 'nullable|string|max:255',
             'zip' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
-            'education' => 'nullable|string|max:255|in:Basic,Secondary,Higher',
+            'education' => 'required|string|max:255|in:Basic,Secondary,Higher',
+            'hobbies' => 'nullable|array',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -53,6 +54,7 @@ class RegisteredUserController extends Controller
             'zip' => $request->zip,
             'country' => $request->country,
             'education' => $request->education,
+            'hobbies' => json_encode($request->hobbies),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
