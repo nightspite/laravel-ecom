@@ -1,13 +1,35 @@
 import { useEffect, FormEventHandler } from "react";
 import GuestLayout from "@/Layouts/GuestLayout";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { Label } from "@/Components/ui/label";
+import { Input } from "@/Components/ui/input";
+import { InputError } from "@/Components/ui/input-error";
+import { Button } from "@/Components/ui/button";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/Components/ui/select";
+import { MultiSelect } from "@/Components/ui/multi-select";
+import { set, uniq } from "lodash";
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        first_name: string;
+        last_name: string;
+        address: string;
+        city: string;
+        state: string;
+        zip: string;
+        country: string;
+        education: string;
+        hobbies: Record<"value" | "label", string>[];
+        email: string;
+        password: string;
+        password_confirmation: string;
+    }>({
         first_name: "",
         last_name: "",
         address: "",
@@ -16,6 +38,7 @@ export default function Register() {
         zip: "",
         country: "",
         education: "",
+        hobbies: [],
         email: "",
         password: "",
         password_confirmation: "",
@@ -40,15 +63,16 @@ export default function Register() {
             <form onSubmit={submit}>
                 <div className="flex gap-4">
                     <div className="w-full">
-                        <InputLabel htmlFor="first_name" value="First name" />
+                        <Label htmlFor="first_name">First name</Label>
 
-                        <TextInput
+                        <Input
+                            type="text"
                             id="first_name"
                             name="first_name"
                             value={data.first_name}
                             className="mt-1 block w-full"
                             autoComplete="first_name"
-                            isFocused={true}
+                            autoFocus
                             onChange={(e) =>
                                 setData("first_name", e.target.value)
                             }
@@ -62,9 +86,10 @@ export default function Register() {
                     </div>
 
                     <div className="w-full">
-                        <InputLabel htmlFor="last_name" value="Last name" />
+                        <Label htmlFor="last_name">Last name</Label>
 
-                        <TextInput
+                        <Input
+                            type="text"
                             id="last_name"
                             name="last_name"
                             value={data.last_name}
@@ -84,9 +109,10 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4 ">
-                    <InputLabel htmlFor="address" value="Address" />
+                    <Label htmlFor="address">Address</Label>
 
-                    <TextInput
+                    <Input
+                        type="text"
                         id="address"
                         name="address"
                         value={data.address}
@@ -101,9 +127,10 @@ export default function Register() {
 
                 <div className="flex gap-4 mt-4">
                     <div className="w-full">
-                        <InputLabel htmlFor="city" value="City" />
+                        <Label htmlFor="city">City</Label>
 
-                        <TextInput
+                        <Input
+                            type="text"
                             id="city"
                             name="city"
                             value={data.city}
@@ -117,9 +144,10 @@ export default function Register() {
                     </div>
 
                     <div className="w-full">
-                        <InputLabel htmlFor="state" value="State" />
+                        <Label htmlFor="state">State</Label>
 
-                        <TextInput
+                        <Input
+                            type="text"
                             id="state"
                             name="state"
                             value={data.state}
@@ -135,9 +163,10 @@ export default function Register() {
 
                 <div className="flex gap-4 mt-4">
                     <div className="w-full">
-                        <InputLabel htmlFor="zip" value="Zip" />
+                        <Label htmlFor="zip">Zip</Label>
 
-                        <TextInput
+                        <Input
+                            type="text"
                             id="zip"
                             name="zip"
                             value={data.zip}
@@ -151,9 +180,10 @@ export default function Register() {
                     </div>
 
                     <div className="w-full">
-                        <InputLabel htmlFor="country" value="Country" />
+                        <Label htmlFor="country">Country</Label>
 
-                        <TextInput
+                        <Input
+                            type="text"
                             id="country"
                             name="country"
                             value={data.country}
@@ -167,15 +197,53 @@ export default function Register() {
                     </div>
                 </div>
 
-                {/* 
-                education -> select
-                interests -> multi-select
-                 */}
+                <div className="mt-4">
+                    <Label htmlFor="education">Education</Label>
+
+                    <Select
+                        name="education"
+                        onValueChange={(o) => setData("education", o)}
+                        defaultValue={data.education}
+                        value={data.education}
+                        required
+                        autoComplete="education"
+                    >
+                        <SelectTrigger className="w-full" id="education">
+                            <SelectValue placeholder="-" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="Basic">Basic</SelectItem>
+                            <SelectItem value="Secondary">Secondary</SelectItem>
+                            <SelectItem value="Higher">Higher</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <InputError message={errors.country} className="mt-2" />
+                </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                    <Label htmlFor="education">Hobbies</Label>
 
-                    <TextInput
+                    <MultiSelect
+                        selected={data.hobbies}
+                        options={[
+                            { value: "Reading", label: "Reading" },
+                            { value: "Writing", label: "Writing" },
+                            { value: "Coding", label: "Coding" },
+                        ]}
+                        onChange={(e) => setData("hobbies", e)}
+                        // className="mt-1 block w-full"
+                        // autoComplete="hobbies"
+                        // required
+                    />
+
+                    <InputError message={errors.hobbies} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <Label htmlFor="email">Email</Label>
+
+                    <Input
                         id="email"
                         type="email"
                         name="email"
@@ -190,9 +258,9 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <Label htmlFor="password">Password</Label>
 
-                    <TextInput
+                    <Input
                         id="password"
                         type="password"
                         name="password"
@@ -207,12 +275,11 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
+                    <Label htmlFor="password_confirmation">
+                        Confirm Password
+                    </Label>
 
-                    <TextInput
+                    <Input
                         id="password_confirmation"
                         type="password"
                         name="password_confirmation"
@@ -239,9 +306,9 @@ export default function Register() {
                         Already registered?
                     </Link>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <Button className="ms-4" disabled={processing}>
                         Register
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </form>
         </GuestLayout>
