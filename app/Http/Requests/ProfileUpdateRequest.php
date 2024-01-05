@@ -25,6 +25,7 @@ class ProfileUpdateRequest extends FormRequest
             'zip' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
             'education' => ['nullable', 'string', 'max:255', Rule::in(['Basic', 'Secondary', 'Higher'])],
+            'hobbies' => ['nullable', 'array'],
         ];
     }
 }

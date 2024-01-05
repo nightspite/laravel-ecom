@@ -54,7 +54,8 @@ class RegisteredUserController extends Controller
             'zip' => $request->zip,
             'country' => $request->country,
             'education' => $request->education,
-            'hobbies' => json_encode($request->hobbies),
+            // 'hobbies' => json_encode($request->hobbies),
+            'hobbies' => $request->hobbies,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

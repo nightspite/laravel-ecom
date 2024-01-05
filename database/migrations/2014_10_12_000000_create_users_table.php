@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            // Custom fields
+
+            $table->enum('role', ['admin', 'user'])->default('user');
+
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('address')->nullable();

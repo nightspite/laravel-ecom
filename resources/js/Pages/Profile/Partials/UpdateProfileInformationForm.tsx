@@ -265,7 +265,7 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div className="mt-4">
-                    <Label htmlFor="education">Hobbies</Label>
+                    <Label htmlFor="hobbies">Hobbies</Label>
 
                     <MultiSelect
                         selected={data.hobbies}

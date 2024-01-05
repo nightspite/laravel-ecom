@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Order extends Model
 {
     use HasFactory;
 
@@ -15,10 +15,8 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'description',
-        'image',
-        'price'
+      'user_id',
+      'completed_at',
     ];
 
     /**
@@ -35,5 +33,6 @@ class Product extends Model
      * @var array<string, string>
      */
     protected $casts = [
+      'completed_at' => 'datetime',
     ];
 }
