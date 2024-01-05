@@ -36,4 +36,15 @@ class Product extends Model
      */
     protected $casts = [
     ];
+
+    // relations
+    public function cartProducts()
+    {
+        return $this->hasMany(CartProduct::class);
+    }
+
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
 }

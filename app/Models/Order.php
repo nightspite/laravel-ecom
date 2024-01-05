@@ -35,4 +35,14 @@ class Order extends Model
     protected $casts = [
       'completed_at' => 'datetime',
     ];
+
+    // relations
+    public function user()
+    {
+      return $this->belongsTo(User::class);
+    }
+    public function orderProducts()
+    {
+      return $this->hasMany(OrderProduct::class);
+    }
 }
