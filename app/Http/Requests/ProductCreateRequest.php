@@ -17,10 +17,11 @@ class ProductCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             // 'image'=> ['image','mimes:jpeg,png,jpg,gif,svg','max:2048'],
             // 'image' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['nullable', 'string']
         ];
     }
 }

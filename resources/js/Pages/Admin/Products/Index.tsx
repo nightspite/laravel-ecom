@@ -35,7 +35,7 @@ const COLUMNS = ({
                         <img
                             src={row?.original?.image}
                             alt=""
-                            className="w-8 h-8 rounded-full object-cover"
+                            className="w-10 h-10 rounded-sm object-cover"
                         />
                     ) : (
                         "-"
@@ -83,7 +83,9 @@ const COLUMNS = ({
         cell: ({ row }) => {
             return (
                 <span className="font-medium">
-                    {formatDateTime(new Date(row?.original?.created_at))}
+                    {row?.original?.created_at
+                        ? formatDateTime(new Date(row?.original?.created_at))
+                        : "-"}
                 </span>
             );
         },
@@ -94,7 +96,9 @@ const COLUMNS = ({
         cell: ({ row }) => {
             return (
                 <span className="font-medium">
-                    {formatDateTime(new Date(row?.original?.updated_at))}
+                    {row?.original?.updated_at
+                        ? formatDateTime(new Date(row?.original?.updated_at))
+                        : "-"}
                 </span>
             );
         },
@@ -173,8 +177,6 @@ export default function Index({
         () => COLUMNS({ isDeleteModalOpen, setIsDeleteModalOpen }),
         [isDeleteModalOpen, setIsDeleteModalOpen]
     );
-
-    console.log(products);
 
     return (
         <AuthenticatedLayout

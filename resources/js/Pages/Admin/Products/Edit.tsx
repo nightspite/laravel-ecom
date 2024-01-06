@@ -89,19 +89,31 @@ export default function Edit({
                             </div>
 
                             <div className="">
-                                <Label htmlFor="image">Image</Label>
+                                <Label htmlFor="image">
+                                    Image URL(temporary)
+                                </Label>
 
-                                <Input
-                                    type="file"
-                                    id="image"
-                                    name="image"
-                                    value={data.image}
-                                    className="mt-1 block w-full"
-                                    autoComplete="image"
-                                    onChange={(e) =>
-                                        setData("image", e.target.value)
-                                    }
-                                />
+                                <div className="flex items-center gap-4">
+                                    <Input
+                                        type="url"
+                                        id="image"
+                                        name="image"
+                                        value={data.image}
+                                        className="mt-1 block w-full"
+                                        autoComplete="image"
+                                        onChange={(e) =>
+                                            setData("image", e.target.value)
+                                        }
+                                    />
+
+                                    {data.image ? (
+                                        <img
+                                            src={data.image}
+                                            alt=""
+                                            className="w-10 h-10 rounded-sm object-cover"
+                                        />
+                                    ) : null}
+                                </div>
 
                                 <InputError
                                     message={errors.image}
