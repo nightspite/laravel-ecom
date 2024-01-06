@@ -28,7 +28,8 @@ class User extends Authenticatable
         'zip',
         'country',
         'education',
-        'hobbies'
+        'hobbies',
+        'role',
     ];
 
     /**

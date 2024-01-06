@@ -11,6 +11,7 @@ export interface User {
     country?: string;
     education?: 'Basic' | 'Secondary' | 'Higher';
     hobbies?: string[];
+    role: 'admin' | 'user';
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -18,3 +19,13 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User;
     };
 };
+
+export interface Product {
+    id: number;
+    name: string;
+    price: number;
+    description: string;
+    image: string;
+    created_at: string;
+    updated_at: string;
+}

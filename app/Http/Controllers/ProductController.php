@@ -3,63 +3,73 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Http\Requests\ProductCreateRequest;
+use App\Http\Requests\ProductUpdateRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // ADMIN
     public function index()
     {
-        //
+        return Inertia::render('Admin/Products/Index', [
+            'products' => Product::all(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+      return Inertia::render('Admin/Products/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ProductCreateRequest $request)
     {
-        //
+        $product = new Product($request->validated());
+        // $product->user_id = Auth::id();
+        $product->save();
+
+        return Redirect::route('admin_products.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Product $product)
     {
-        //
+      return Inertia::render('Admin/Products/Edit', [
+        'product'=> $product,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        //
+        $product->fill($request->validated());
+        $product->save();
+
+        return Redirect::route('admin_products.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
-        //
+      $product->delete();
+      return Redirect::route('admin_products.index');
+    }
+
+    // USER
+
+    public function show(Product $product)
+    {
+        return Inertia::render('Products/Show', [
+            'product' => $product,
+        ]);
+    }
+
+    public function indexPublic()
+    {
+        return Inertia::render('Products/Index', [
+            'products' => Product::all(),
+        ]);
     }
 }

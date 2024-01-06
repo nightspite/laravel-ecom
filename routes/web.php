@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CartController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,14 +19,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::redirect("/","/products");
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -33,6 +29,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::middleware('admin')->prefix('admin')->name('admin_')->group(function () {
+      Route::controller(ProductController::class)->prefix('/products')->name('products.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::get('/edit/${product}', 'edit')->name('edit');
+
+        Route::post('/store', 'store')->name('store');
+        Route::patch('/update/${product}', 'update')->name('update');
+        Route::delete('/destroy/${product}', 'destroy')->name('destroy');
+      });
+    });
+
+});
+
+Route::controller(ProductController::class)->prefix('/products')->name('products.')->group(function () {
+  Route::get('/', 'indexPublic')->name('indexPublic');
+  Route::get('/{product}', 'show')->name('show');
 });
 
 require __DIR__.'/auth.php';
