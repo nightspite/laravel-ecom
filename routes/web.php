@@ -45,8 +45,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::controller(ProductController::class)->prefix('/products')->name('products.')->group(function () {
-  Route::get('/', 'indexPublic')->name('indexPublic');
-  Route::get('/{product}', 'show')->name('show');
+  Route::get('/', 'public_index')->name('index');
+  Route::get('/{product}', 'public_show')->name('show');
 });
 
 require __DIR__.'/auth.php';

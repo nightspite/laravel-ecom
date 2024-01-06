@@ -37,6 +37,14 @@ export default function DefaultLayout({
                                     >
                                         Dashboard
                                     </NavLink>
+                                    <NavLink
+                                        href={route("products.index")}
+                                        active={route().current(
+                                            "products.index"
+                                        )}
+                                    >
+                                        Products
+                                    </NavLink>
                                     {isAdmin ? (
                                         <NavLink
                                             href={route("admin_products.index")}
@@ -44,7 +52,7 @@ export default function DefaultLayout({
                                                 "admin_products.index"
                                             )}
                                         >
-                                            Products
+                                            Products(admin)
                                         </NavLink>
                                     ) : null}
                                 </div>
@@ -167,6 +175,12 @@ export default function DefaultLayout({
                             active={route().current("dashboard")}
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("products.index")}
+                            active={route().current("products.index")}
+                        >
+                            Products
                         </ResponsiveNavLink>
                         {isAdmin ? (
                             <ResponsiveNavLink

@@ -58,15 +58,14 @@ class ProductController extends Controller
     }
 
     // USER
-
-    public function show(Product $product)
+    public function public_show(Product $product)
     {
         return Inertia::render('Products/Show', [
             'product' => $product,
         ]);
     }
 
-    public function indexPublic()
+    public function public_index()
     {
         return Inertia::render('Products/Index', [
             'products' => Product::all(),
