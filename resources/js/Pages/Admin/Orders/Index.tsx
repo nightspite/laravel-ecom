@@ -125,8 +125,6 @@ export default function Index({
         pageSize: 10,
     });
 
-    console.log(orders);
-
     return (
         <AuthenticatedLayout
             user={auth.user}

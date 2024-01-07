@@ -132,8 +132,6 @@ export default function Index({ auth, order }: PageProps<{ order: Order }>) {
 
     const summaryCost = useMemo(() => sumOrderTotal(order), [order]);
 
-    console.log(order);
-
     return (
         <AuthenticatedLayout
             user={auth.user}
