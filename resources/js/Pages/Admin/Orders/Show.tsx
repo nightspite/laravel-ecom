@@ -1,6 +1,13 @@
 import AuthenticatedLayout from "@/Layouts/DefaultLayout";
 import { Head, Link } from "@inertiajs/react";
-import { Cart, CartProduct, PageProps, Product } from "@/types";
+import {
+    Cart,
+    CartProduct,
+    Order,
+    OrderProduct,
+    PageProps,
+    Product,
+} from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/Components/ui/button";
 import { Eraser, Eye, Minus, MoreHorizontal, Plus, Trash } from "lucide-react";
@@ -14,14 +21,12 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { DataTable } from "@/Components/ui/data-table";
 import { useMemo, useState } from "react";
-import { formatMoney, sumCartTotal } from "@/lib/money";
-import RemoveProductFromCartModal from "./RemoveProductFromCartModal";
-import ClearCartModal from "./ClearCartModal";
-import ChangeQuantityButton from "./ChangeQuantityButton";
-import SendEmailCartButton from "./SendEmailCartButton";
-import OrderButton from "./OrderButton";
+import { formatMoney, sumCartTotal, sumOrderTotal } from "@/lib/money";
+import PayButton from "@/Pages/Orders/PayButton";
+import { formatDateTime } from "@/lib/date";
+import { Badge } from "@/Components/ui/badge";
 
-const COLUMNS: ColumnDef<CartProduct>[] = [
+const COLUMNS: ColumnDef<OrderProduct>[] = [
     {
         header: "Image",
         accessorKey: "image",
@@ -80,15 +85,7 @@ const COLUMNS: ColumnDef<CartProduct>[] = [
         cell: ({ row }) => {
             return (
                 <div className="font-medium flex items-center gap-4">
-                    <ChangeQuantityButton
-                        product={row.original.product}
-                        type="decrement"
-                    />
                     {row?.original?.quantity}
-                    <ChangeQuantityButton
-                        product={row.original.product}
-                        type="increment"
-                    />
                 </div>
             );
         },
@@ -97,20 +94,45 @@ const COLUMNS: ColumnDef<CartProduct>[] = [
         header: "",
         accessorKey: "actions",
         cell: ({ row }) => {
-            return <ActionsCell row={row} />;
+            return (
+                <div className="flex justify-end">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button size="icon" variant="ghost">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal size={16} />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <Link
+                                href={route(
+                                    "products.show",
+                                    row.original.product?.id
+                                )}
+                            >
+                                <DropdownMenuItem>
+                                    <Eye className="mr-2" size={16} />
+                                    View
+                                </DropdownMenuItem>
+                            </Link>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            );
         },
     },
 ];
 
-export default function Index({ auth, cart }: PageProps<{ cart: Cart }>) {
+export default function Index({ auth, order }: PageProps<{ order: Order }>) {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     });
 
-    const summaryCost = useMemo(() => sumCartTotal(cart), [cart]);
+    const summaryCost = useMemo(() => sumOrderTotal(order), [order]);
 
-    const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false);
+    console.log(order);
 
     return (
         <AuthenticatedLayout
@@ -118,44 +140,54 @@ export default function Index({ auth, cart }: PageProps<{ cart: Cart }>) {
             header={
                 <div className="flex items-center gap-4">
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        Cart
+                        Order
                     </h2>
-                    <OrderButton />
-                    <Button
-                        variant="outline"
-                        onClick={() => setIsClearCartModalOpen(true)}
-                    >
-                        <Eraser className="mr-2" size={16} />
-                        Clear Cart
-                    </Button>
-                    <ClearCartModal
-                        open={isClearCartModalOpen}
-                        setOpen={setIsClearCartModalOpen}
-                    />
                 </div>
             }
         >
-            <Head title="Cart" />
+            <Head title="Order" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <h2 className="mb-4 flex items-center gap-4">
+                        <h2 className="">
+                            <b>Customer:</b> {order?.user?.email || "-"}
+                        </h2>
+                        <h2 className="">
+                            <b>Status:</b>{" "}
+                            {order?.completed_at ? (
+                                <Badge>Completed</Badge>
+                            ) : (
+                                <Badge variant="outline">Pending</Badge>
+                            )}
+                        </h2>
+                        <h2 className="">
+                            <b>Created At:</b>{" "}
+                            {order?.created_at
+                                ? formatDateTime(new Date(order?.created_at))
+                                : "-"}
+                        </h2>
+                        <h2 className="">
+                            <b>Completed At:</b>{" "}
+                            {order?.completed_at
+                                ? formatDateTime(new Date(order?.completed_at))
+                                : "-"}
+                        </h2>
+                        <h2 className="mb-4">
                             <b>Summary cost:</b> {formatMoney(summaryCost || 0)}
-                            <SendEmailCartButton cart={cart} />
                         </h2>
 
                         <DataTable
                             bordered
                             columns={COLUMNS}
-                            data={(cart?.cart_product || [])?.slice(
+                            data={(order?.order_product || [])?.slice(
                                 pagination.pageIndex * pagination.pageSize,
                                 (pagination.pageIndex + 1) * pagination.pageSize
                             )}
                             isLoading={false}
                             onPaginationChange={setPagination}
                             pageCount={Math.ceil(
-                                ((cart?.cart_product || [])?.length || 0) /
+                                ((order?.order_product || [])?.length || 0) /
                                     pagination.pageSize
                             )}
                             pagination={{
@@ -169,49 +201,3 @@ export default function Index({ auth, cart }: PageProps<{ cart: Cart }>) {
         </AuthenticatedLayout>
     );
 }
-
-const ActionsCell = ({ row }: { row: { original: CartProduct } }) => {
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-    return (
-        <>
-            <div className="flex justify-end">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button size="icon" variant="ghost">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal size={16} />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <Link
-                            href={route(
-                                "products.show",
-                                row.original.product?.id
-                            )}
-                        >
-                            <DropdownMenuItem>
-                                <Eye className="mr-2" size={16} />
-                                View
-                            </DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            onClick={() => setIsDeleteModalOpen(true)}
-                        >
-                            <Trash className="mr-2" size={16} />
-                            Remove
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-            <RemoveProductFromCartModal
-                open={isDeleteModalOpen}
-                setOpen={setIsDeleteModalOpen}
-                product={row.original.product}
-                quantity={row.original.quantity}
-            />
-        </>
-    );
-};

@@ -35,7 +35,7 @@ export interface Cart {
     user_id: number;
     created_at: string;
     updated_at: string;
-    cart_product: CartProduct[];
+    cart_product?: CartProduct[];
 }
 
 export interface CartProduct {
@@ -52,7 +52,9 @@ export interface Order {
     user_id: number;
     created_at: string;
     updated_at: string;
-    order_product: OrderProduct[];
+    completed_at: string | null;
+    order_product?: OrderProduct[];
+    user?: User;
 }
 
 export interface OrderProduct {

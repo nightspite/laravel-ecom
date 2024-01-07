@@ -12,7 +12,7 @@ export default function SendEmailCartButton({
 }) {
     const subject = "My Order";
     const products = useMemo(() => {
-        return cart.cart_product.map((cart_product) => {
+        return (cart?.cart_product || []).map((cart_product) => {
             return `- ${cart_product.product.name} (${cart_product.quantity})`;
         });
     }, [cart]);

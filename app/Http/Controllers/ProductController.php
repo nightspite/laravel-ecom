@@ -59,7 +59,7 @@ class ProductController extends Controller
       return Redirect::route('admin_products.index');
     }
 
-    // USER
+    // PUBLIC
     // Views
     public function public_show(Product $product)
     {

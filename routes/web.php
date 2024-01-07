@@ -38,16 +38,16 @@ Route::middleware('auth')->group(function () {
       Route::controller(ProductController::class)->prefix('/products')->name('products.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
-        Route::get('/edit/${product}', 'edit')->name('edit');
+        Route::get('/edit/{product}', 'edit')->name('edit');
 
         Route::post('/store', 'store')->name('store');
-        Route::patch('/update/${product}', 'update')->name('update');
-        Route::delete('/destroy/${product}', 'destroy')->name('destroy');
+        Route::patch('/update/{product}', 'update')->name('update');
+        Route::delete('/destroy/{product}', 'destroy')->name('destroy');
       });
 
       Route::controller(OrderController::class)->prefix('/orders')->name('orders.')->group(function () {
       Route::get('/', 'index')->name('index');
-      Route::get('/{product}', 'show')->name('show');
+      Route::get('/{order}', 'show')->name('show');
     });
     });
 
@@ -63,8 +63,11 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(OrderController::class)->prefix('/orders')->name('orders.')->group(function () {
-      Route::get('/', 'public_index')->name('index');
-      Route::get('/{product}', 'public_show')->name('show');
+      Route::get('/', 'user_index')->name('index');
+      Route::get('/{order}', 'user_show')->name('show');
+
+      Route::post('/store', 'store')->name('store');
+      Route::post('/pay/{order}', 'pay')->name('pay');
     });
 });
 
