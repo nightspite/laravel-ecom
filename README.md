@@ -56,3 +56,11 @@ password: P@ssw0rd1234
 email: johndoe@test.com
 password: P@ssw0rd1234
 ```
+
+
+## Demo
+### User demo
+https://github.com/nightspite/laravel-ecom/assets/26671956/47e6b80a-d336-4ba4-b07f-03fd8dc27c94
+
+### Admin demo
+https://github.com/nightspite/laravel-ecom/assets/26671956/d44618ce-63bc-457a-9a45-cc2571a65443
