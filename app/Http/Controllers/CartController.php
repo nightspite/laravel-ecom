@@ -32,10 +32,8 @@ class CartController extends Controller
             $cart->save();
         }
 
-        $cartProduct = $cart->cartProduct()->where('product_id', $product->id)->first();
-
-        if ($cartProduct) {
-            $cartProduct->increment('quantity');
+        if($cart->cartProduct()->where('product_id', $product->id)->exists()) {
+            $cart->cartProduct()->where('product_id', $product->id)->increment('quantity');
             return redirect('/cart');
         }
 
@@ -58,10 +56,8 @@ class CartController extends Controller
     public function removeQuantity(Product $product) {
       $cart = Cart::where('user_id', auth()->id())->where('status', 'pending')->first();
 
-      $cartProduct = $cart->cartProduct()->where('product_id', $product->id)->first();
-
-      if ($cartProduct->quantity === 1) {
-        $cartProduct->delete();
+      if ($cart->cartProduct()->where('product_id', $product->id)->first()->quantity === 1) {
+        $cart->cartProduct()->where('product_id', $product->id)->delete();
         return redirect('/cart');
       }
 
