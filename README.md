@@ -19,7 +19,7 @@ This is a simple webshop application build with Laravel, Intertia and React.
 2. Use the sql dump in the root of the project `dump.sql` to populate the database with test data
 
 
-Note
+##### Note
 ----
 The database credentials are set to the following, if you don't want to use docker-compose you can change the credentials in the .env file.
 
@@ -31,6 +31,13 @@ DB_DATABASE=mysql
 DB_USERNAME=mysql
 DB_PASSWORD=mysql
 ```
+
+##### Note 2
+----
+There are 3 dump files.
+- `dump.sql` is the full database dump (users, products, carts, orders)
+- `dump_register.sql` is the database dump with users and products
+- `dump_cart.sql` is the database dump with users, products and carts
 
 ## Run the application locally
 Run in separate terminals:
@@ -49,5 +56,3 @@ password: P@ssw0rd1234
 email: johndoe@test.com
 password: P@ssw0rd1234
 ```
-
-
