@@ -18,6 +18,7 @@ import { formatMoney, sumCartTotal } from "@/lib/money";
 import RemoveProductFromCartModal from "./RemoveProductFromCartModal";
 import ClearCartModal from "./ClearCartModal";
 import ChangeQuantityButton from "./ChangeQuantityButton";
+import SendEmailCartButton from "./SendEmailCartButton";
 
 const COLUMNS: ColumnDef<CartProduct>[] = [
     {
@@ -138,8 +139,9 @@ export default function Index({ auth, cart }: PageProps<{ cart: Cart }>) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <h2 className="mb-4 ">
+                        <h2 className="mb-4 flex items-center gap-4">
                             <b>Summary cost:</b> {formatMoney(summaryCost || 0)}
+                            <SendEmailCartButton cart={cart} />
                         </h2>
 
                         <DataTable
