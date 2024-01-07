@@ -22,7 +22,10 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         return Inertia::render('Admin/Orders/Show', [
-            'order' => $order->with('orderProduct.product')->with('user')->first(),
+            'order' => $order->where('id', $order->id)
+            ->with('orderProduct.product')
+            ->with('user')
+            ->first(),
         ]);
     }
 
@@ -46,7 +49,10 @@ class OrderController extends Controller
       }
 
       return Inertia::render('Orders/Show', [
-          'order' => $order->with('orderProduct.product')->with('user')->first(),
+          'order' => $order->where('id', $order->id)
+            ->with('orderProduct.product')
+            ->with('user')
+            ->first(),
       ]);
     }
 
@@ -72,10 +78,10 @@ class OrderController extends Controller
 
     public function pay(Order $order)
     {
-      $user = auth()->user();
-      if ($order->user_id !== $user->id) {
-        return redirect('/unauthorized');
-      }
+      // $user = auth()->user();
+      // if ($order->user_id !== $user->id) {
+      //   return redirect('/unauthorized');
+      // }
 
       $order->update([
         'completed_at' => now(),
