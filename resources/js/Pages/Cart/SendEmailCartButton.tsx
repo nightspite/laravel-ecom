@@ -25,7 +25,7 @@ export default function SendEmailCartButton({
                 subject
             )}&body=${encodeURIComponent(body)}`}
         >
-            <Button>
+            <Button variant="outline">
                 <Send size={16} className="mr-2" />
                 Send Email
             </Button>

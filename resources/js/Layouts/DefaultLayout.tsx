@@ -5,7 +5,7 @@ import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import { User } from "@/types";
-import { ShoppingCart } from "lucide-react";
+import { ListOrdered, ShoppingCart } from "lucide-react";
 
 export default function DefaultLayout({
     user,
@@ -75,6 +75,10 @@ export default function DefaultLayout({
                                         href={route("orders.index")}
                                         active={route().current("orders.index")}
                                     >
+                                        <ListOrdered
+                                            size={16}
+                                            className="mr-2"
+                                        />
                                         Orders
                                     </NavLink>
                                     <NavLink
@@ -238,6 +242,7 @@ export default function DefaultLayout({
                             href={route("orders.index")}
                             active={route().current("orders.index")}
                         >
+                            <ListOrdered size={16} className="mr-2" />
                             Orders
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
