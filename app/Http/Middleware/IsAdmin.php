@@ -19,6 +19,6 @@ class IsAdmin
         return response("Unauthorized", 401);
       }
 
-      return redirect('');
+      return redirect('/unauthorized');
     }
 }
