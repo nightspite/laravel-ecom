@@ -43,6 +43,7 @@ There are 3 dump files.
 Run in separate terminals:
 1. `php artisan serve`
 2. `npm run dev`
+3. Open [http://localhost:8000](http://localhost:8000)
 
 ## User credentials
 ### Admin account
