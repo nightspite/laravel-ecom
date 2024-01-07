@@ -1,27 +1,23 @@
-import { useRef, FormEventHandler } from "react";
+import { FormEventHandler } from "react";
 import Modal from "@/Components/Modal";
 import { useForm } from "@inertiajs/react";
 import { Button } from "@/Components/ui/button";
-import { Product } from "@/types";
-import { formatMoney } from "@/lib/money";
 
-export default function DeleteProductForm({
+export default function ClearCartModal({
     className = "",
-    product,
     open,
     setOpen,
 }: {
     className?: string;
-    product: Product;
     open: boolean;
     setOpen: (open: boolean) => void;
 }) {
     const { delete: destroy, processing, reset } = useForm();
 
-    const deleteProduct: FormEventHandler = (e) => {
+    const clearCart: FormEventHandler = (e) => {
         e.preventDefault();
 
-        destroy(route("admin_products.destroy", product.id), {
+        destroy(route("cart.clear"), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
         });
@@ -35,23 +31,10 @@ export default function DeleteProductForm({
 
     return (
         <Modal show={open} onClose={closeModal}>
-            <form onSubmit={deleteProduct} className="p-6">
+            <form onSubmit={clearCart} className="p-6">
                 <h2 className="text-lg font-medium text-gray-900">
-                    Are you sure you want to delete this product?
+                    Are you sure you want to remove all items from the cart?
                 </h2>
-
-                <p className="mt-1 text-sm text-gray-600">
-                    <b>Name:</b> {product.name}
-                </p>
-                <p className="mt-1 text-sm text-gray-600">
-                    <b>Description:</b> {product.description}
-                </p>
-                <p className="mt-1 text-sm text-gray-600">
-                    <b>Image:</b> {product.image}
-                </p>
-                <p className="mt-1 text-sm text-gray-600">
-                    <b>Price:</b> {formatMoney(product.price)}
-                </p>
 
                 <div className="mt-6 flex justify-end">
                     <Button
@@ -67,7 +50,7 @@ export default function DeleteProductForm({
                         className="ms-3"
                         disabled={processing}
                     >
-                        Delete Product
+                        Remove All Products
                     </Button>
                 </div>
             </form>

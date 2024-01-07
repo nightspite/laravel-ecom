@@ -4,31 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    public function getAll()
+    // ADMIN
+    // Views
+    public function index()
     {
-        //
+        return Inertia::render('Admin/Orders/Index', [
+            'orders' => Order::all(),
+        ]);
     }
 
-    public function get(Order $order)
+    // USER
+    // Views
+    public function public_show(Order $order)
     {
-        //
+        return Inertia::render('Orders/Show', [
+            'order' => $order,
+        ]);
     }
 
-    public function create()
+    public function public_index()
     {
-        //
-    }  
-
-    public function update(Request $request, Order $order)
-    {
-        //
-    }
-
-    public function destroy(Order $order)
-    {
-        //
+        return Inertia::render('Orders/Index', [
+            'orders' => Order::all(),
+        ]);
     }
 }

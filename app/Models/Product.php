@@ -39,12 +39,12 @@ class Product extends Model
     ];
 
     // relations
-    public function cartProducts()
+    public function cartProduct()
     {
         return $this->hasMany(CartProduct::class);
     }
 
-    public function orderProducts()
+    public function orderProduct()
     {
         return $this->hasMany(OrderProduct::class);
     }

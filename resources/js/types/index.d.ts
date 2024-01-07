@@ -29,3 +29,37 @@ export interface Product {
     created_at: string;
     updated_at: string;
 }
+
+export interface Cart {
+    id: number;
+    user_id: number;
+    created_at: string;
+    updated_at: string;
+    cart_product: CartProduct[];
+}
+
+export interface CartProduct {
+  cart_id: number;
+  product_id: number;
+  quantity: number;
+  product: Product;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Order {
+    id: number;
+    user_id: number;
+    created_at: string;
+    updated_at: string;
+    order_product: OrderProduct[];
+}
+
+export interface OrderProduct {
+    order_id: number;
+    product_id: number;
+    quantity: number;
+    product: Product;
+    created_at: string;
+    updated_at: string;
+}

@@ -5,23 +5,25 @@ import { Button } from "@/Components/ui/button";
 import { Product } from "@/types";
 import { formatMoney } from "@/lib/money";
 
-export default function DeleteProductForm({
+export default function RemoveProductFromCartModal({
     className = "",
     product,
+    quantity,
     open,
     setOpen,
 }: {
     className?: string;
     product: Product;
+    quantity: number;
     open: boolean;
     setOpen: (open: boolean) => void;
 }) {
     const { delete: destroy, processing, reset } = useForm();
 
-    const deleteProduct: FormEventHandler = (e) => {
+    const removeProductFromCart: FormEventHandler = (e) => {
         e.preventDefault();
 
-        destroy(route("admin_products.destroy", product.id), {
+        destroy(route("cart.remove", product.id), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
         });
@@ -35,9 +37,9 @@ export default function DeleteProductForm({
 
     return (
         <Modal show={open} onClose={closeModal}>
-            <form onSubmit={deleteProduct} className="p-6">
+            <form onSubmit={removeProductFromCart} className="p-6">
                 <h2 className="text-lg font-medium text-gray-900">
-                    Are you sure you want to delete this product?
+                    Are you sure you want to remove this product from your cart?
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
@@ -51,6 +53,12 @@ export default function DeleteProductForm({
                 </p>
                 <p className="mt-1 text-sm text-gray-600">
                     <b>Price:</b> {formatMoney(product.price)}
+                </p>
+                <p className="mt-1 text-sm text-gray-600">
+                    <b>Quantity:</b> {quantity}
+                </p>
+                <p className="mt-1 text-sm text-gray-600">
+                    <b>Total:</b> {formatMoney(product.price * quantity)}
                 </p>
 
                 <div className="mt-6 flex justify-end">
@@ -67,7 +75,7 @@ export default function DeleteProductForm({
                         className="ms-3"
                         disabled={processing}
                     >
-                        Delete Product
+                        Remove Product
                     </Button>
                 </div>
             </form>

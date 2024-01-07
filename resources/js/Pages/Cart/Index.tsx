@@ -1,9 +1,9 @@
 import AuthenticatedLayout from "@/Layouts/DefaultLayout";
 import { Head, Link } from "@inertiajs/react";
-import { PageProps, Product } from "@/types";
+import { Cart, CartProduct, PageProps, Product } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/Components/ui/button";
-import { Eye, MoreHorizontal, Pencil, Plus, Trash } from "lucide-react";
+import { Eraser, Eye, Minus, MoreHorizontal, Plus, Trash } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,20 +14,21 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { DataTable } from "@/Components/ui/data-table";
 import { useMemo, useState } from "react";
-import { formatMoney } from "@/lib/money";
-import DeleteProductForm from "./DeleteProductModal";
-import { formatDateTime } from "@/lib/date";
+import { formatMoney, sumCartTotal } from "@/lib/money";
+import RemoveProductFromCartModal from "./RemoveProductFromCartModal";
+import ClearCartModal from "./ClearCartModal";
+import ChangeQuantityButton from "./ChangeQuantityButton";
 
-const COLUMNS: ColumnDef<Product>[] = [
+const COLUMNS: ColumnDef<CartProduct>[] = [
     {
         header: "Image",
         accessorKey: "image",
         cell: ({ row }) => {
             return (
                 <span className="font-medium">
-                    {row?.original?.image ? (
+                    {row?.original?.product?.image ? (
                         <img
-                            src={row?.original?.image}
+                            src={row?.original?.product?.image}
                             alt=""
                             className="w-10 h-10 rounded-sm object-cover"
                         />
@@ -44,7 +45,7 @@ const COLUMNS: ColumnDef<Product>[] = [
         cell: ({ row }) => {
             return (
                 <span className="font-medium">
-                    {row?.original?.name || "-"}
+                    {row?.original?.product?.name || "-"}
                 </span>
             );
         },
@@ -55,7 +56,7 @@ const COLUMNS: ColumnDef<Product>[] = [
         cell: ({ row }) => {
             return (
                 <span className="font-medium truncate">
-                    {row?.original?.description || "-"}
+                    {row?.original?.product?.description || "-"}
                 </span>
             );
         },
@@ -66,34 +67,27 @@ const COLUMNS: ColumnDef<Product>[] = [
         cell: ({ row }) => {
             return (
                 <span className="font-medium">
-                    {formatMoney(row?.original?.price)}
+                    {formatMoney(row?.original?.product?.price)}
                 </span>
             );
         },
     },
     {
-        header: "Created At",
-        accessorKey: "created_at",
+        header: "Quantity",
+        accessorKey: "quantity",
         cell: ({ row }) => {
             return (
-                <span className="font-medium">
-                    {row?.original?.created_at
-                        ? formatDateTime(new Date(row?.original?.created_at))
-                        : "-"}
-                </span>
-            );
-        },
-    },
-    {
-        header: "Updated At",
-        accessorKey: "updated_at",
-        cell: ({ row }) => {
-            return (
-                <span className="font-medium">
-                    {row?.original?.updated_at
-                        ? formatDateTime(new Date(row?.original?.updated_at))
-                        : "-"}
-                </span>
+                <div className="font-medium flex items-center gap-4">
+                    <ChangeQuantityButton
+                        product={row.original.product}
+                        type="decrement"
+                    />
+                    {row?.original?.quantity}
+                    <ChangeQuantityButton
+                        product={row.original.product}
+                        type="increment"
+                    />
+                </div>
             );
         },
     },
@@ -106,14 +100,15 @@ const COLUMNS: ColumnDef<Product>[] = [
     },
 ];
 
-export default function Index({
-    auth,
-    products,
-}: PageProps<{ products: Product[] }>) {
+export default function Index({ auth, cart }: PageProps<{ cart: Cart }>) {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     });
+
+    const summaryCost = useMemo(() => sumCartTotal(cart), [cart]);
+
+    const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false);
 
     return (
         <AuthenticatedLayout
@@ -121,33 +116,44 @@ export default function Index({
             header={
                 <div className="flex items-center">
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        Products
+                        Cart
                     </h2>
-                    <Link href={route("admin_products.create")}>
-                        <Button variant="outline" className="ml-4">
-                            <Plus className="mr-2" size={16} />
-                            Create new
-                        </Button>
-                    </Link>
+                    <Button
+                        variant="outline"
+                        className="ml-4"
+                        onClick={() => setIsClearCartModalOpen(true)}
+                    >
+                        <Eraser className="mr-2" size={16} />
+                        Clear Cart
+                    </Button>
+                    <ClearCartModal
+                        open={isClearCartModalOpen}
+                        setOpen={setIsClearCartModalOpen}
+                    />
                 </div>
             }
         >
-            <Head title="Products" />
+            <Head title="Cart" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                        <h2 className="mb-4 ">
+                            <b>Summary cost:</b> {formatMoney(summaryCost || 0)}
+                        </h2>
+
                         <DataTable
                             bordered
                             columns={COLUMNS}
-                            data={products?.slice(
+                            data={(cart?.cart_product || [])?.slice(
                                 pagination.pageIndex * pagination.pageSize,
                                 (pagination.pageIndex + 1) * pagination.pageSize
                             )}
                             isLoading={false}
                             onPaginationChange={setPagination}
                             pageCount={Math.ceil(
-                                (products?.length || 0) / pagination.pageSize
+                                ((cart?.cart_product || [])?.length || 0) /
+                                    pagination.pageSize
                             )}
                             pagination={{
                                 pageIndex: pagination.pageIndex,
@@ -161,7 +167,7 @@ export default function Index({
     );
 }
 
-const ActionsCell = ({ row }: { row: { original: Product } }) => {
+const ActionsCell = ({ row }: { row: { original: CartProduct } }) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     return (
@@ -176,18 +182,15 @@ const ActionsCell = ({ row }: { row: { original: Product } }) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <Link href={route("products.show", row.original.id)}>
+                        <Link
+                            href={route(
+                                "products.show",
+                                row.original.product?.id
+                            )}
+                        >
                             <DropdownMenuItem>
                                 <Eye className="mr-2" size={16} />
                                 View
-                            </DropdownMenuItem>
-                        </Link>
-                        <Link
-                            href={route("admin_products.edit", row.original.id)}
-                        >
-                            <DropdownMenuItem>
-                                <Pencil className="mr-2" size={16} />
-                                Edit
                             </DropdownMenuItem>
                         </Link>
                         <DropdownMenuSeparator />
@@ -195,15 +198,16 @@ const ActionsCell = ({ row }: { row: { original: Product } }) => {
                             onClick={() => setIsDeleteModalOpen(true)}
                         >
                             <Trash className="mr-2" size={16} />
-                            Delete
+                            Remove
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <DeleteProductForm
+            <RemoveProductFromCartModal
                 open={isDeleteModalOpen}
                 setOpen={setIsDeleteModalOpen}
-                product={row.original}
+                product={row.original.product}
+                quantity={row.original.quantity}
             />
         </>
     );

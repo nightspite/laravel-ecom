@@ -2,6 +2,7 @@ import AuthenticatedLayout from "@/Layouts/DefaultLayout";
 import { Head, Link } from "@inertiajs/react";
 import { PageProps, Product } from "@/types";
 import { formatMoney } from "@/lib/money";
+import AddProductToCartButton from "./AddProductToCartButton";
 
 export default function Edit({
     auth,
@@ -23,28 +24,33 @@ export default function Edit({
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <div className="grid grid-cols-3 gap-8">
                             {products?.map((product) => (
-                                <Link
-                                    href={route("products.show", product.id)}
-                                    key={product.id}
-                                >
-                                    <img
-                                        src={product?.image}
-                                        alt=""
-                                        className="w-full aspect-square rounded-sm object-cover"
-                                    />
-                                    <h2 className="font-semibold text-xl mt-2">
-                                        {product.name}
-                                    </h2>
-                                    <p className="text-gray-600 line-clamp-2">
-                                        {product.description}
-                                    </p>
+                                <div key={product.id}>
+                                    <Link
+                                        href={route(
+                                            "products.show",
+                                            product.id
+                                        )}
+                                    >
+                                        <img
+                                            src={product?.image}
+                                            alt=""
+                                            className="w-full aspect-square rounded-sm object-cover"
+                                        />
+                                        <h2 className="font-semibold text-xl mt-2">
+                                            {product.name}
+                                        </h2>
+                                        <p className="text-gray-600 line-clamp-2">
+                                            {product.description}
+                                        </p>
 
-                                    <div className="mt-4">
-                                        <span className="text-gray-600">
-                                            {formatMoney(product.price)}
-                                        </span>
-                                    </div>
-                                </Link>
+                                        <div className="mt-4">
+                                            <span className="text-gray-600">
+                                                {formatMoney(product.price)}
+                                            </span>
+                                        </div>
+                                    </Link>
+                                    <AddProductToCartButton product={product} />
+                                </div>
                             ))}
                         </div>
                     </div>

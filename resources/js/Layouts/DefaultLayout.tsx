@@ -5,6 +5,7 @@ import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import { User } from "@/types";
+import { ShoppingCart } from "lucide-react";
 
 export default function DefaultLayout({
     user,
@@ -20,9 +21,9 @@ export default function DefaultLayout({
     return (
         <div className="min-h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-4 lg:px-8">
                     <div className="flex justify-between h-16">
-                        <div className="flex">
+                        <div className="flex w-full">
                             <div className="shrink-0 flex items-center">
                                 <Link href="/">
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
@@ -30,7 +31,7 @@ export default function DefaultLayout({
                             </div>
 
                             {isAuthenticated ? (
-                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <div className="hidden space-x-8 lg:-my-px lg:ms-10 lg:flex w-full">
                                     <NavLink
                                         href={route("dashboard")}
                                         active={route().current("dashboard")}
@@ -46,21 +47,52 @@ export default function DefaultLayout({
                                         Products
                                     </NavLink>
                                     {isAdmin ? (
-                                        <NavLink
-                                            href={route("admin_products.index")}
-                                            active={route().current(
-                                                "admin_products.index"
-                                            )}
-                                        >
-                                            Products(admin)
-                                        </NavLink>
+                                        <>
+                                            <NavLink
+                                                href={route(
+                                                    "admin_products.index"
+                                                )}
+                                                active={route().current(
+                                                    "admin_products.index"
+                                                )}
+                                            >
+                                                Products(admin)
+                                            </NavLink>
+                                            <NavLink
+                                                href={route(
+                                                    "admin_orders.index"
+                                                )}
+                                                active={route().current(
+                                                    "admin_orders.index"
+                                                )}
+                                            >
+                                                Orders(admin)
+                                            </NavLink>
+                                        </>
                                     ) : null}
+                                    <NavLink
+                                        className="!ml-auto"
+                                        href={route("orders.index")}
+                                        active={route().current("orders.index")}
+                                    >
+                                        Orders
+                                    </NavLink>
+                                    <NavLink
+                                        href={route("cart.index")}
+                                        active={route().current("cart.index")}
+                                    >
+                                        <ShoppingCart
+                                            size={16}
+                                            className="mr-2"
+                                        />
+                                        Cart
+                                    </NavLink>
                                 </div>
                             ) : null}
                         </div>
 
                         {isAuthenticated ? (
-                            <div className="hidden sm:flex sm:items-center sm:ms-6">
+                            <div className="hidden lg:flex lg:items-center lg:ms-6 shrink-0">
                                 <div className="ms-3 relative">
                                     <Dropdown>
                                         <Dropdown.Trigger>
@@ -105,7 +137,7 @@ export default function DefaultLayout({
                                 </div>
                             </div>
                         ) : (
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden space-x-8 lg:-my-px lg:ms-10 lg:flex">
                                 <NavLink
                                     href={route("login")}
                                     active={route().current("login")}
@@ -120,7 +152,7 @@ export default function DefaultLayout({
                                 </NavLink>
                             </div>
                         )}
-                        <div className="-me-2 flex items-center sm:hidden">
+                        <div className="-me-2 flex items-center lg:hidden">
                             <button
                                 onClick={() =>
                                     setShowingNavigationDropdown(
@@ -166,7 +198,7 @@ export default function DefaultLayout({
                 <div
                     className={
                         (showingNavigationDropdown ? "block" : "hidden") +
-                        " sm:hidden"
+                        " lg:hidden"
                     }
                 >
                     <div className="pt-2 pb-3 space-y-1">
@@ -183,13 +215,38 @@ export default function DefaultLayout({
                             Products
                         </ResponsiveNavLink>
                         {isAdmin ? (
-                            <ResponsiveNavLink
-                                href={route("admin_products.index")}
-                                active={route().current("admin_products.index")}
-                            >
-                                Products
-                            </ResponsiveNavLink>
+                            <>
+                                <ResponsiveNavLink
+                                    href={route("admin_products.index")}
+                                    active={route().current(
+                                        "admin_products.index"
+                                    )}
+                                >
+                                    Products(admin)
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href={route("admin_orders.index")}
+                                    active={route().current(
+                                        "admin_orders.index"
+                                    )}
+                                >
+                                    Orders(admin)
+                                </ResponsiveNavLink>
+                            </>
                         ) : null}
+                        <ResponsiveNavLink
+                            href={route("orders.index")}
+                            active={route().current("orders.index")}
+                        >
+                            Orders
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("cart.index")}
+                            active={route().current("cart.index")}
+                        >
+                            <ShoppingCart size={16} className="mr-2" />
+                            Cart
+                        </ResponsiveNavLink>
                     </div>
 
                     {isAuthenticated ? (
@@ -237,7 +294,7 @@ export default function DefaultLayout({
 
             {header && (
                 <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
                         {header}
                     </div>
                 </header>

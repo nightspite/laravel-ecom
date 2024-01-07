@@ -1,9 +1,8 @@
 import AuthenticatedLayout from "@/Layouts/DefaultLayout";
 import { Head } from "@inertiajs/react";
 import { PageProps, Product } from "@/types";
-import { Button } from "@/Components/ui/button";
-import { Plus } from "lucide-react";
 import { formatMoney } from "@/lib/money";
+import AddProductToCartButton from "./AddProductToCartButton";
 
 export default function Show({
     auth,
@@ -41,10 +40,7 @@ export default function Show({
                             </span>
                         </div>
 
-                        <Button className="mt-4">
-                            <Plus className="mr-2" size={16} />
-                            Add to cart
-                        </Button>
+                        <AddProductToCartButton product={product} />
                     </div>
                 </div>
             </div>

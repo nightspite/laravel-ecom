@@ -40,8 +40,28 @@ Route::middleware('auth')->group(function () {
         Route::patch('/update/${product}', 'update')->name('update');
         Route::delete('/destroy/${product}', 'destroy')->name('destroy');
       });
+
+      Route::controller(OrderController::class)->prefix('/orders')->name('orders.')->group(function () {
+      Route::get('/', 'index')->name('index');
+      Route::get('/{product}', 'show')->name('show');
+    });
     });
 
+
+    Route::controller(CartController::class)->prefix('/cart')->name('cart.')->group(function () {
+      Route::get('/', 'index')->name('index');
+
+      Route::post('/add/{product}', 'add')->name('add');
+      Route::delete('/remove/{product}', 'remove')->name('remove');
+      Route::delete('/clear', 'clear')->name('clear');
+      Route::post('/add-quantity/{product}', 'addQuantity')->name('addQuantity');
+      Route::post('/remove-quantity/{product}', 'removeQuantity')->name('removeQuantity');
+    });
+
+    Route::controller(OrderController::class)->prefix('/orders')->name('orders.')->group(function () {
+      Route::get('/', 'public_index')->name('index');
+      Route::get('/{product}', 'public_show')->name('show');
+    });
 });
 
 Route::controller(ProductController::class)->prefix('/products')->name('products.')->group(function () {

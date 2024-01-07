@@ -15,6 +15,7 @@ use Inertia\Response;
 class ProductController extends Controller
 {
     // ADMIN
+    // Views
     public function index()
     {
         return Inertia::render('Admin/Products/Index', [
@@ -27,6 +28,14 @@ class ProductController extends Controller
       return Inertia::render('Admin/Products/Create');
     }
 
+    public function edit(Product $product)
+    {
+      return Inertia::render('Admin/Products/Edit', [
+        'product'=> $product,
+        ]);
+    }
+
+    // Actions
     public function store(ProductCreateRequest $request)
     {
         $product = new Product($request->validated());
@@ -34,13 +43,6 @@ class ProductController extends Controller
         $product->save();
 
         return Redirect::route('admin_products.index');
-    }
-
-    public function edit(Product $product)
-    {
-      return Inertia::render('Admin/Products/Edit', [
-        'product'=> $product,
-        ]);
     }
 
     public function update(ProductUpdateRequest $request, Product $product)
@@ -58,6 +60,7 @@ class ProductController extends Controller
     }
 
     // USER
+    // Views
     public function public_show(Product $product)
     {
         return Inertia::render('Products/Show', [
